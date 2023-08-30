@@ -37,20 +37,32 @@ function readLine() {
 
 function timeConversion(s) {
     // Write your code here
-    let i = 0;
-    //if it's 'A' && first two number is smaller or equal to 12, return the same without the 'AM'
-    //if its 'P' && first two number is smaller equal to 12, 
     
-    if (s[s.length - 2] === 'P' && Number(s.slice(0, 2)) !== 12) {
-        const step1 = s.split("");
-        const step2 = (Number(s.slice(0, 2)) + 12).toString();
-        step1.splice(0, 2, step2);
-        return step1.join("").slice(0, 8);
-    } else if (s[s.length - 2] === 'A' && Number(s.slice(0, 2)) === 12) {
-        return s.replace("12", "00").slice(0, 8);
-    } else {
-        return s.slice(0, 8);
+    const removeAmPm = (timeString) => timeString.slice(0, 8);
+    
+    const convertHour = (timeString) => {
+        const amPm = s[s.length - 2];
+        const hour = Number(s.slice(0, 2));
+        
+        const is12Am = () => amPm === 'A' && hour === 12;
+        const isPmBefore12 = () => amPm === 'P' && hour !== 12;
+        const updateHour = (timeString, convertedHour) => {
+            const timeAsArray = timeString.split("")
+            timeAsArray.splice(0, 2, convertedHour);
+            return timeAsArray.join("");
+        }
+        
+        if (isPmBefore12()) {
+            const convertedHour = (hour + 12).toString();
+            return updateHour(timeString, convertedHour);
+        } else if (is12Am()) {
+            return timeString.replace("12", "00");
+        } else {
+            return timeString;
+        }
     }
+    
+    return removeAmPm(convertHour(s));
 }
 
 
